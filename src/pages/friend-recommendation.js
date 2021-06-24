@@ -13,7 +13,7 @@ class FriendRecommendation extends Component {
     }
 
     componentDidMount(){
-        fetch("https://randomuser.me/api/?results=5")
+        fetch("https://randomuser.me/api/?results=8")
         .then(resp => resp.json())
         .then(data => {
             this.setState({
