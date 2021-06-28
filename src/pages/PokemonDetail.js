@@ -15,18 +15,27 @@ export default function PokemonDetail(props) {
     }
 
     function Capitalize(str){
-        return str.charAt(0).toUpperCase() + str.slice(1);
+        str = str.replace('-',' ')
+        let arr = str.replace(/\s+/g,' ').trim().split(' ')
+        let result = ''
+
+        for (let i = 0; i < arr.length; i++) {
+            if(arr[i][0])
+                result += arr[i][0].toUpperCase() + arr[i].slice(1)
+            result += ' '
+        }
+        return result
     }
 
     return (
-        <Row>
-            <Table bordered className="my-2">
+        <Row className={`card--${data.types[0].type.name}`}>
+            <Table bordered className="my-2 card__caption">
             <tbody>
                 <tr>
                     <td><Image src={`https://pokeres.bastionbot.org/images/pokemon/${id}.png`} width="200px"/></td>
                     <td rowSpan="3">
                         <Accordion defaultActiveKey="0">
-                            <Card>
+                            <div>
                                 <Accordion.Toggle as={Card.Header} eventKey="0">
                                     Moves
                                 </Accordion.Toggle>
@@ -36,14 +45,14 @@ export default function PokemonDetail(props) {
                                             <tbody>
                                                 {data.moves.map((move, index) => {
                                                     return <tr key={index}>
-                                                        <td>{move.move.name}</td>
+                                                        <td>{Capitalize(move.move.name)}</td>
                                                     </tr>
                                                 })}
                                             </tbody>
                                         </Table>
                                     </Card.Body>
                                 </Accordion.Collapse>
-                            </Card>
+                            </div>
                         </Accordion>
                     </td>
                     <td>
@@ -75,7 +84,7 @@ export default function PokemonDetail(props) {
                         <h2>Stats:</h2>
                         {data.stats.map((stat, index) => {
                             return <div key={index}>
-                                {stat.stat.name} : {stat.base_stat}
+                                {Capitalize(stat.stat.name)} : {stat.base_stat}
                             </div>
                         })}
                     </td>

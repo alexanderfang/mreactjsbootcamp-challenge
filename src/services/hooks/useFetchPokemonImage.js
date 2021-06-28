@@ -10,7 +10,6 @@ const useFetchPokemonImage = (apiUrl) => {
         fetch(apiUrl)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             setData(data)
             setLoading(true)
         })

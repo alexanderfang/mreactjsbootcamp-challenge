@@ -11,9 +11,9 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Navbar bg="dark" variant="dark">
+        <Navbar variant="dark">
           <Container>
-            <Navbar.Brand href="#home">
+            <Navbar.Brand href="/">
             Pokemon
             </Navbar.Brand>
             <Link to="/">Home</Link> {" "}
