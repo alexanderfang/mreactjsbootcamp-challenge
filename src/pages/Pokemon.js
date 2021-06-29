@@ -5,7 +5,7 @@ import PokemonCard from '../components/PokemonCard'
 import useFetchPokemon from '../services/hooks/useFetchPokemon'
 
 const Pokemon = () => {
-    const {data , loading, error} = useFetchPokemon("https://pokeapi.co/api/v2/pokemon?limit=10");
+    const {data , loading, error} = useFetchPokemon("https://pokeapi.co/api/v2/pokemon?limit=12");
 
     const [listItems, setListItems] = useState();
     const [isFetching, setIsFetching] = useState(false);
@@ -24,7 +24,6 @@ const Pokemon = () => {
     function handleScroll() {
         if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
         setIsFetching(true);
-        console.log('Fetch more list items!');
     }
 
     useEffect(() => {
@@ -41,7 +40,6 @@ const Pokemon = () => {
             setNextData(data.next);
         })
         .catch(err => console.log(err));
-        console.log(listItems);
     }
 
     if(!listItems){
