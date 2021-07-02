@@ -7,16 +7,27 @@ import { faCheck, faHeart } from '@fortawesome/free-solid-svg-icons'
 import Loading from './loading'
 import useFetchPokemonImage from '../services/hooks/useFetchPokemonImage'
 import '../styles/cardStyle.css'
-import { addToFavorite } from '../store/actions/PokemonAction'
+// import { addToFavorite } from '../store/actions/PokemonAction'
+import { addFavorite, removeFavorite } from '../store/pokemons/action';
 
 export default function PokemonCard(props) {
 
     const {data, loading, error} = useFetchPokemonImage(props.url);
-    const favorite = useSelector((state) => state.favorite);
+    const favorite = useSelector((state) => state.pokemons.favorites);
     const dispatch = useDispatch();
+    const [isFavorite, setIsFavorite] = useState(checkFavorite(data.id))
 
-    function handleAddToFavorite(event){
-        dispatch(addToFavorite(event.currentTarget.id));
+    // function handleAddToFavorite(event){
+    //     dispatch(addToFavorite(event.currentTarget.id));
+    // }
+    function handleFavorite(id) {
+        if(favorite.find((element) => element === id)){
+          dispatch(removeFavorite(id));
+          setIsFavorite(false);
+        }else{
+          dispatch(addFavorite(id));
+          setIsFavorite(true);
+        }
     }
 
     function Capitalize(str){
@@ -33,11 +44,9 @@ export default function PokemonCard(props) {
     }
 
     function checkFavorite(id){
-        console.log(favorite);
-        if(favorite.find((element) => element == id)){
-            return faCheck;
-        }
-        return faHeart;
+        if(favorite.find((element) => element == id))
+            return true;
+        return false;
     }
 
     return (
@@ -48,17 +57,17 @@ export default function PokemonCard(props) {
             loading ? (<Loading/>) : 
                 <figure className={`card card--${data.types[0].type.name}`}>
                     <div className="multi-button">
-                        <button onClick={handleAddToFavorite} id={data.id}>
-                            <FontAwesomeIcon icon={checkFavorite(data.id)} inverse />
+                        <button onClick={() => handleFavorite(data.id)} id={data.id} style={{color: isFavorite ? 'white' : 'red'}}>
+                            <FontAwesomeIcon style={{ color: isFavorite ? 'red' : undefined }} icon={faHeart} inverse />
                         </button>
                     </div>
                     <Link to={`poke/${data.id}`}> 
                         <div className="card__image-container">
-                            <img src={`https://pokeres.bastionbot.org/images/pokemon/${data.id}.png`} alt="Eevee" className="card__image"/>   
+                            <img src={`https://pokeres.bastionbot.org/images/pokemon/${data.id}.png`} alt={props.name} className="card__image"/>   
                         </div>
                     
                         <figcaption className="card__caption">
-                            <h1 className="card__name">{Capitalize(props.name)}</h1>
+                            <h1 className="card__name">{Capitalize(data.name)}</h1>
                         
                             <h3 className="card__type">
                                 {data.types[0].type.name}
@@ -84,28 +93,4 @@ export default function PokemonCard(props) {
     </>
         
     )
-
-    // return (
-    //     <>
-    //     {
-    //     error != null ? 
-    //         <Alert variant="danger">{error}</Alert> : 
-    //         loading ? (<Loading/>) : 
-    //             <Card className="mx-auto my-2" style={{ width: '18rem' }}>
-    //                 <Card.Img className="p-2" src={`https://pokeres.bastionbot.org/images/pokemon/${data.id}.png`} />
-    //                 {/* <Card.Img className="p-2" src={data.sprites.front_default} /> */}
-    //                 <Card.Body>
-    //                     <Card.Title>{Capitalize(props.name)}</Card.Title>
-    //                     <Card.Subtitle>
-    //                         <PokemonTyping type={data.types} count={data.types.length}/>
-    //                     </Card.Subtitle>
-    //                     <br/>
-    //                     <Link to={`poke/${data.id}`}>Detail</Link>
-    //                     <Button style={{ width:"100%" }} variant="primary" onClick={()=>this.props.onDetail(this.props.user)}>Detail</Button>
-    //                 </Card.Body>
-    //             </Card>
-    //     }
-    // </>
-        
-    // )
 }

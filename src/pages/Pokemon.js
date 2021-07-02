@@ -1,8 +1,10 @@
 import React, { useEffect , useState } from 'react'
 import { Alert , Col , Container , Row } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
 import Loading from '../components/loading'
 import PokemonCard from '../components/PokemonCard'
 import useFetchPokemon from '../services/hooks/useFetchPokemon'
+import { getPokemons } from '../store/pokemons/action'
 
 const Pokemon = () => {
     const {data , loading, error} = useFetchPokemon("https://pokeapi.co/api/v2/pokemon?limit=12");
@@ -10,11 +12,19 @@ const Pokemon = () => {
     const [listItems, setListItems] = useState();
     const [isFetching, setIsFetching] = useState(false);
     const [nextData, setNextData] = useState(null);
+    // const pokemons = useSelector((state) => state.pokemons.data);
+    // const error = useSelector((state) => state.pokemons.error);
+    // const loading = useSelector((state) => state.pokemons.loading);
+    // const dispatch = useDispatch();
 
     useEffect(() => {
         setListItems(data.results);
         setNextData(data.next);
     }, [data]);
+
+    // useEffect(() => {
+    //     dispatch(getPokemons());
+    // }, [])
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
@@ -47,7 +57,7 @@ const Pokemon = () => {
     }
 
     return (
-        <> {/** <-- tanda ini namanya fragment,, sebenarnya sama aja seperti <fragment></fragment> */}
+        <> 
             <Container fluid className="pokemon-homepage">
                 <h1>Pokémon List</h1>
             {error != null ?
